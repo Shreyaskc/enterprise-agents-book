@@ -3,7 +3,7 @@
 
 from __future__ import annotations
 
-from contextlib import contextmanager
+from contextlib import ExitStack, contextmanager
 import json
 from pathlib import Path
 import sqlite3
@@ -44,16 +44,19 @@ class Store:
     def __init__(self, path: str | Path = ":memory:", *, now: Callable[[], float] = time.time):
         if str(path) != ":memory:":
             Path(path).parent.mkdir(parents=True, exist_ok=True)
-        self.db = sqlite3.connect(str(path), isolation_level=None, timeout=5)
-        self.db.row_factory = sqlite3.Row
-        self.db.execute("PRAGMA foreign_keys=ON")
-        self.db.executescript(SCHEMA)
-        self.now = now
-        self.fixture = load_fixture()
-        with self.transaction():
-            for user in self.fixture["principals"]:
-                self.db.execute("INSERT OR IGNORE INTO principals VALUES (?, ?, ?, 1)",
-                                (user["tenant"], user["principal"], canonical(user["permissions"])))
+        with ExitStack() as cleanup:
+            self.db = sqlite3.connect(str(path), isolation_level=None, timeout=5)
+            cleanup.callback(self.db.close)
+            self.db.row_factory = sqlite3.Row
+            self.db.execute("PRAGMA foreign_keys=ON")
+            self.db.executescript(SCHEMA)
+            self.now = now
+            self.fixture = load_fixture()
+            with self.transaction():
+                for user in self.fixture["principals"]:
+                    self.db.execute("INSERT OR IGNORE INTO principals VALUES (?, ?, ?, 1)",
+                                    (user["tenant"], user["principal"], canonical(user["permissions"])))
+            cleanup.pop_all()
 
     def close(self) -> None:
         self.db.close()

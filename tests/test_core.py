@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 from concurrent.futures import ThreadPoolExecutor
+from contextlib import closing
 from dataclasses import asdict, replace
 import hashlib
 import json
@@ -278,7 +279,7 @@ class CoreTests(unittest.TestCase):
         original = self.app.execute(SERVICE, action, approval, "backup-effect")
         self.s.revoke(PLATFORM, REVIEWER.principal)
         backup = Path(self.temp.name) / "backup.sqlite"
-        with sqlite3.connect(backup) as destination:
+        with closing(sqlite3.connect(backup)) as destination, destination:
             self.s.db.backup(destination)
         with Store(backup, now=lambda: self.clock[0]) as restored:
             self.assertEqual(restored.checkpoint(SERVICE, "backup-run")[1]["stage"], "purchase_checked")

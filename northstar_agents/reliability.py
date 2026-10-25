@@ -7,6 +7,7 @@ This simulates a separate destination; it is not a distributed exactly-once clai
 from __future__ import annotations
 
 from concurrent.futures import ThreadPoolExecutor
+from contextlib import ExitStack
 from dataclasses import asdict, dataclass, replace
 from datetime import datetime, timezone
 import hashlib
@@ -66,14 +67,17 @@ class Destination:
 
     def __init__(self, path: Path):
         path.parent.mkdir(parents=True, exist_ok=True)
-        self.db = sqlite3.connect(path, isolation_level=None, timeout=5)
-        self.db.row_factory = sqlite3.Row
-        self.db.executescript("""
-        CREATE TABLE IF NOT EXISTS destination_notes (
-          tenant TEXT, request_key TEXT, payload TEXT, PRIMARY KEY(tenant,request_key));
-        CREATE TABLE IF NOT EXISTS destination_receipts (
-          tenant TEXT, request_key TEXT, payload_hash TEXT, receipt TEXT, PRIMARY KEY(tenant,request_key));
-        """)
+        with ExitStack() as cleanup:
+            self.db = sqlite3.connect(path, isolation_level=None, timeout=5)
+            cleanup.callback(self.db.close)
+            self.db.row_factory = sqlite3.Row
+            self.db.executescript("""
+            CREATE TABLE IF NOT EXISTS destination_notes (
+              tenant TEXT, request_key TEXT, payload TEXT, PRIMARY KEY(tenant,request_key));
+            CREATE TABLE IF NOT EXISTS destination_receipts (
+              tenant TEXT, request_key TEXT, payload_hash TEXT, receipt TEXT, PRIMARY KEY(tenant,request_key));
+            """)
+            cleanup.pop_all()
 
     def close(self):
         self.db.close()
@@ -130,27 +134,33 @@ class ReliabilityLab:
         if source.resolve() == destination.resolve():
             raise Rejected("destination_must_be_separate")
         self.source_path, self.destination_path = source, destination
-        self.store = Store(source)
-        self.app = Northstar(self.store)
-        self.destination = Destination(destination)
-        self.store.db.executescript("""
-        CREATE TABLE IF NOT EXISTS note_intents (
-          tenant TEXT, request_key TEXT, principal TEXT, payload_hash TEXT, payload TEXT, approval_id TEXT,
-          PRIMARY KEY(tenant,request_key));
-        CREATE TABLE IF NOT EXISTS note_reauthorizations (
-          tenant TEXT, request_key TEXT, approval_id TEXT, PRIMARY KEY(tenant,request_key), UNIQUE(tenant,approval_id));
-        CREATE TABLE IF NOT EXISTS note_outbox (
-          tenant TEXT, request_key TEXT, state TEXT, attempts INTEGER, receipt TEXT,
-          PRIMARY KEY(tenant,request_key),
-          FOREIGN KEY(tenant,request_key) REFERENCES note_intents(tenant,request_key));
-        """)
+        with ExitStack() as cleanup:
+            self.store = Store(source)
+            cleanup.callback(self.store.close)
+            self.app = Northstar(self.store)
+            self.destination = Destination(destination)
+            cleanup.callback(self.destination.close)
+            self.store.db.executescript("""
+            CREATE TABLE IF NOT EXISTS note_intents (
+              tenant TEXT, request_key TEXT, principal TEXT, payload_hash TEXT, payload TEXT, approval_id TEXT,
+              PRIMARY KEY(tenant,request_key));
+            CREATE TABLE IF NOT EXISTS note_reauthorizations (
+              tenant TEXT, request_key TEXT, approval_id TEXT, PRIMARY KEY(tenant,request_key), UNIQUE(tenant,approval_id));
+            CREATE TABLE IF NOT EXISTS note_outbox (
+              tenant TEXT, request_key TEXT, state TEXT, attempts INTEGER, receipt TEXT,
+              PRIMARY KEY(tenant,request_key),
+              FOREIGN KEY(tenant,request_key) REFERENCES note_intents(tenant,request_key));
+            """)
+            cleanup.pop_all()
 
     def __enter__(self):
         return self
 
     def __exit__(self, *_):
-        self.destination.close()
-        self.store.close()
+        try:
+            self.destination.close()
+        finally:
+            self.store.close()
 
     def validate(self, ctx: Context, note: CaseNote) -> dict:
         note = CaseNote.parse(asdict(note))

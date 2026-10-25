@@ -72,9 +72,9 @@ class ReliabilityTests(unittest.TestCase):
         self.assertEqual(self.lab.destination.count(SERVICE, self.key), 1)
         code = ("import json,sys; from pathlib import Path; "
                 "from northstar_agents.reliability import ReliabilityLab; "
-                "from northstar_agents.service import SERVICE; "
-                "lab=ReliabilityLab(Path(sys.argv[1]),Path(sys.argv[2])); "
-                "print(json.dumps(lab.reconcile(SERVICE,'note-104'))); lab.__exit__()")
+                "from northstar_agents.service import SERVICE;\n"
+                "with ReliabilityLab(Path(sys.argv[1]),Path(sys.argv[2])) as lab:\n"
+                "    print(json.dumps(lab.reconcile(SERVICE,'note-104')))")
         p = subprocess.run([sys.executable, "-c", code, str(self.lab.source_path), str(self.lab.destination_path)],
                            cwd=ROOT, capture_output=True, text=True, timeout=15)
         self.assertEqual(p.returncode, 0, p.stderr)

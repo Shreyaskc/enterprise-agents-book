@@ -8,6 +8,7 @@ test suite, LLM evaluation, or enterprise-readiness assessment.
 
 from __future__ import annotations
 
+from contextlib import closing
 import json
 from pathlib import Path
 import platform
@@ -27,7 +28,7 @@ def main() -> int:
     try:
         with tempfile.TemporaryDirectory(prefix="enterprise-agents-readiness-") as tmp:
             path = Path(tmp) / "checkpoint.sqlite"
-            with sqlite3.connect(path) as db:
+            with closing(sqlite3.connect(path)) as db, db:
                 db.execute("CREATE TABLE checkpoints (run_id TEXT PRIMARY KEY, step INTEGER)")
                 db.execute("INSERT INTO checkpoints VALUES (?, ?)", ("capability-check", 1))
                 db.execute("CREATE VIRTUAL TABLE retrieval USING fts5(body)")
@@ -38,7 +39,7 @@ def main() -> int:
                 checks["sqlite_fts5"] = (
                     "pass" if row == ("approval checkpoint tenant",) else "fail"
                 )
-            with sqlite3.connect(path) as db:
+            with closing(sqlite3.connect(path)) as db, db:
                 row = db.execute(
                     "SELECT step FROM checkpoints WHERE run_id = ?", ("capability-check",)
                 ).fetchone()

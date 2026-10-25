@@ -15,17 +15,15 @@ class ReceiptRecoveryTests(unittest.TestCase):
 
     def setUp(self):
         self.tmp = tempfile.TemporaryDirectory()
+        self.addCleanup(self.tmp.cleanup)
         self.p = Path(self.tmp.name)
         self.clock = [1000]
         self.lab = ReliabilityLab(self.p / 'source.sqlite', self.p / 'destination.sqlite')
+        self.addCleanup(lambda: self.lab.__exit__())
         self.lab.store.now = lambda: self.clock[0]
         self.note = CaseNote()
         self.grant = self.lab.approve(SERVICE, self.note)
         self.lab.enqueue(SERVICE, self.note, self.grant, 'A')
-
-    def tearDown(self):
-        self.lab.__exit__()
-        self.tmp.cleanup()
 
     def reopen(self):
         self.lab.__exit__()
