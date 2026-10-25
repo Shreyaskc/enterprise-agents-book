@@ -1,0 +1,10 @@
+[project]
+name = "northstar-enterprise-agents"
+version = "0.1.0"
+description = "Offline Northstar enterprise agent labs"
+license = "MIT"
+requires-python = ">=3.12,<3.15"
+dependencies = []
+
+# Run directly from this checkout: python -m northstar_agents.
+# No build backend or package installation is required by the reader track.

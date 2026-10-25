@@ -1,0 +1,104 @@
+{
+  "schema_version": 1,
+  "contract_kind": "labs",
+  "labs": [
+    {
+      "lab": 1,
+      "title": "Fundamentals",
+      "stage": "glossary",
+      "command": "python -m northstar_agents glossary",
+      "prerequisites": "None for concept; shell basics to run",
+      "owner": "Product lead and all readers"
+    },
+    {
+      "lab": 2,
+      "title": "Data and baseline",
+      "stage": "baseline",
+      "command": "python -m northstar_agents baseline",
+      "prerequisites": "Basic Python, dictionaries, integer money",
+      "owner": "Application engineer and data steward"
+    },
+    {
+      "lab": 3,
+      "title": "Retrieval with provenance",
+      "stage": "retrieve",
+      "command": "python -m northstar_agents retrieve --query \"returns purchase case\"",
+      "prerequisites": "Lab 2, text matching, source attribution",
+      "owner": "Retrieval engineer and data steward"
+    },
+    {
+      "lab": 4,
+      "title": "Bounded tool agent",
+      "stage": "agent",
+      "command": "python -m northstar_agents agent",
+      "prerequisites": "Labs 2\u20133, functions, JSON, runtime validation",
+      "owner": "Application engineer"
+    },
+    {
+      "lab": 5,
+      "title": "Memory lifecycle",
+      "stage": "memory",
+      "command": "python -m northstar_agents memory",
+      "prerequisites": "Lab 4, state and expiry",
+      "owner": "Application engineer and privacy owner"
+    },
+    {
+      "lab": 6,
+      "title": "Durability and recovery",
+      "stage": "workflow",
+      "command": "python -m northstar_agents workflow --db .state/workflow.sqlite --run-id lab06 --pause-after purchase_checked",
+      "prerequisites": "Labs 4\u20135, SQL transactions and state machines",
+      "owner": "Backend engineer and SRE",
+      "resume_command": "python -m northstar_agents workflow --db .state/workflow.sqlite --run-id lab06",
+      "reliability_command": "python -m northstar_agents durability-lab --report artifacts/reports/durability-lab.json"
+    },
+    {
+      "lab": 7,
+      "title": "Approvals and security",
+      "stage": "approvals",
+      "command": "python -m northstar_agents approvals",
+      "prerequisites": "Lab 6, authorization and transactional boundaries",
+      "owner": "Application, security and business approval owners"
+    },
+    {
+      "lab": 8,
+      "title": "Evaluation and observability",
+      "stage": "evaluate",
+      "command": "python -m northstar_agents evaluate --output artifacts/reports/evaluation.json",
+      "prerequisites": "Labs 2\u20137, test assertions and measurement",
+      "owner": "Quality owner and SRE"
+    },
+    {
+      "lab": 9,
+      "title": "Specialist teams",
+      "stage": "teams",
+      "command": "python -m northstar_agents teams",
+      "prerequisites": "Labs 4 and 7\u20138, role boundaries and routing",
+      "owner": "Service and Inventory Operations engineers"
+    },
+    {
+      "lab": 10,
+      "title": "Shared platform architecture",
+      "stage": "platform",
+      "command": "python -m northstar_agents platform",
+      "prerequisites": "Labs 6\u20139, tenancy and least privilege",
+      "owner": "Platform Engineering and security"
+    },
+    {
+      "lab": 11,
+      "title": "Deployment and operations",
+      "stage": "operations",
+      "command": "python -m northstar_agents operations",
+      "prerequisites": "Lab 10, backup, incident and change management",
+      "owner": "Platform Engineering and SRE"
+    },
+    {
+      "lab": 12,
+      "title": "Capstone",
+      "stage": "capstone",
+      "command": "python -m northstar_agents capstone --report artifacts/reports/capstone.json",
+      "prerequisites": "Labs 1\u201311",
+      "owner": "Cross-functional delivery team"
+    }
+  ]
+}

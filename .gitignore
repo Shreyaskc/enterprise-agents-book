@@ -1,0 +1,35 @@
+# Python and local tooling
+__pycache__/
+*.py[cod]
+.venv/
+.cache/
+.uv-cache/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+build/
+dist/
+*.egg-info/
+
+# Local credentials and developer environment
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+
+# Local runtime state and unreviewed downloads
+.state/
+artifacts/local/
+artifacts/reports/
+data/raw/
+data/derived/
+*.sqlite
+*.sqlite3
+*.sqlite-wal
+*.sqlite-shm
+
+# OS noise
+.DS_Store

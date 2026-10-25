@@ -1,0 +1,4 @@
+# Core runtime and test dependencies: none.
+# Exact tested interpreters and SQLite versions: docs/reproducibility.md.
+# This is an explicit zero-third-party-dependency inventory, not a resolver lock.
+# Optional Ollama HTTP adapter uses Python's standard library, no SDK.

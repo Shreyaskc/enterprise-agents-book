@@ -1,0 +1,181 @@
+{
+  "schema_version": 1,
+  "artifact_kind": "chapter_card_execution_contract",
+  "commands": [
+    {
+      "id": "ch01-positive",
+      "chapter": 1,
+      "kind": "lab",
+      "command": "python -m northstar_agents glossary",
+      "expected_exit": 0
+    },
+    {
+      "id": "ch01-implemented-check",
+      "chapter": 1,
+      "kind": "unittest_selector",
+      "command": "python -m unittest -v tests.test_core.CoreTests.test_documents_cannot_execute_instructions",
+      "expected_exit": 0
+    },
+    {
+      "id": "ch02-positive",
+      "chapter": 2,
+      "kind": "lab",
+      "command": "python -m northstar_agents baseline",
+      "expected_exit": 0
+    },
+    {
+      "id": "ch02-implemented-check",
+      "chapter": 2,
+      "kind": "unittest_selector",
+      "command": "python -m unittest -v tests.test_core.CoreTests.test_fixture_hash_is_verified",
+      "expected_exit": 0
+    },
+    {
+      "id": "ch03-positive",
+      "chapter": 3,
+      "kind": "lab",
+      "command": "python -m northstar_agents retrieve --query \"returns purchase case\"",
+      "expected_exit": 0
+    },
+    {
+      "id": "ch03-implemented-check",
+      "chapter": 3,
+      "kind": "unittest_selector",
+      "command": "python -m unittest -v tests.test_core.CoreTests.test_unknown_retrieval_abstains",
+      "expected_exit": 0
+    },
+    {
+      "id": "ch04-positive",
+      "chapter": 4,
+      "kind": "lab",
+      "command": "python -m northstar_agents agent",
+      "expected_exit": 0
+    },
+    {
+      "id": "ch04-implemented-check",
+      "chapter": 4,
+      "kind": "negative",
+      "command": "python -m northstar_agents agent --maximum-steps 2",
+      "expected_exit": 2
+    },
+    {
+      "id": "ch05-positive",
+      "chapter": 5,
+      "kind": "lab",
+      "command": "python -m northstar_agents memory",
+      "expected_exit": 0
+    },
+    {
+      "id": "ch05-implemented-check",
+      "chapter": 5,
+      "kind": "unittest_selector",
+      "command": "python -m unittest -v tests.test_core.CoreTests.test_memory_ttl_source_version_scope_and_delete",
+      "expected_exit": 0
+    },
+    {
+      "id": "ch06-positive",
+      "chapter": 6,
+      "kind": "lab",
+      "command": "python -m northstar_agents workflow --db .state/workflow.sqlite --run-id lab06 --pause-after purchase_checked",
+      "expected_exit": 0
+    },
+    {
+      "id": "ch06-recovery",
+      "chapter": 6,
+      "kind": "lab",
+      "command": "python -m northstar_agents workflow --db .state/workflow.sqlite --run-id lab06",
+      "expected_exit": 0
+    },
+    {
+      "id": "ch06-two-store",
+      "chapter": 6,
+      "kind": "lab",
+      "command": "python -m northstar_agents durability-lab --report artifacts/reports/durability-lab.json",
+      "expected_exit": 0
+    },
+    {
+      "id": "ch07-positive",
+      "chapter": 7,
+      "kind": "lab",
+      "command": "python -m northstar_agents approvals",
+      "expected_exit": 0
+    },
+    {
+      "id": "ch07-implemented-check",
+      "chapter": 7,
+      "kind": "unittest_selector",
+      "command": "python -m unittest -v tests.test_core.CoreTests.test_approval_binds_exact_payload_and_policy",
+      "expected_exit": 0
+    },
+    {
+      "id": "ch08-positive",
+      "chapter": 8,
+      "kind": "lab",
+      "command": "python -m northstar_agents evaluate --output artifacts/reports/evaluation.json",
+      "expected_exit": 0
+    },
+    {
+      "id": "ch08-implemented-check",
+      "chapter": 8,
+      "kind": "unittest_selector",
+      "command": "python -m unittest -v tests.test_cli.LabAcceptanceTests.test_report_is_written_and_existing_user_file_preserved",
+      "expected_exit": 0
+    },
+    {
+      "id": "ch09-positive",
+      "chapter": 9,
+      "kind": "lab",
+      "command": "python -m northstar_agents teams",
+      "expected_exit": 0
+    },
+    {
+      "id": "ch09-implemented-check",
+      "chapter": 9,
+      "kind": "unittest_selector",
+      "command": "python -m unittest -v tests.test_core.CoreTests.test_team_permissions_are_distinct_inside_one_tenant",
+      "expected_exit": 0
+    },
+    {
+      "id": "ch10-positive",
+      "chapter": 10,
+      "kind": "lab",
+      "command": "python -m northstar_agents platform",
+      "expected_exit": 0
+    },
+    {
+      "id": "ch10-implemented-check",
+      "chapter": 10,
+      "kind": "unittest_selector",
+      "command": "python -m unittest -v tests.test_core.CoreTests.test_tenant_invoice_and_case_leakage_denied",
+      "expected_exit": 0
+    },
+    {
+      "id": "ch11-positive",
+      "chapter": 11,
+      "kind": "lab",
+      "command": "python -m northstar_agents operations",
+      "expected_exit": 0
+    },
+    {
+      "id": "ch11-implemented-check",
+      "chapter": 11,
+      "kind": "unittest_selector",
+      "command": "python -m unittest -v tests.test_core.CoreTests.test_backup_restore_preserves_checkpoint_receipt_and_revocation",
+      "expected_exit": 0
+    },
+    {
+      "id": "ch12-positive",
+      "chapter": 12,
+      "kind": "lab",
+      "command": "python -m northstar_agents capstone --report artifacts/reports/capstone.json",
+      "expected_exit": 0
+    },
+    {
+      "id": "ch12-implemented-check",
+      "chapter": 12,
+      "kind": "unittest_selector",
+      "command": "python -m unittest -v tests.test_core.CoreTests.test_timeout_after_commit_reconciles_without_second_mutation",
+      "expected_exit": 0
+    }
+  ]
+}

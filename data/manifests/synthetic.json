@@ -1,0 +1,8 @@
+{
+  "schema_version": 1,
+  "path": "data/fixtures/northstar_synthetic.json",
+  "sha256": "edfd6446365fadbec0876e9dd1f0e800e89a27cda21bbebd65e3cf7570a7d47d",
+  "source_kind": "invented_teaching_material_not_uci",
+  "author": "Northstar companion authors",
+  "contains_customer_identifiers": false
+}

@@ -1,0 +1,17 @@
+# Testing and review evidence
+
+This staging export carries no previous private validation records. Run fresh checks and record their exact code revision, fixture hash, command, interpreter, expected/observed values and limitations. An audit or pre-existing baseline is not a new coordinated review round.
+
+`python scripts/run_tests.py` uses standard-library unittest and rejects empty discovery. Tests deny Python socket connections in their process; the offline wrapper is an acceptance diagnostic, not a hostile-code sandbox. The suite covers strict contracts, tenant canaries, document injection, exact approval binding, creator/reviewer revocation, duplicate/concurrent requests, rollback, timeout after commit, process restart, stale checkpoints, backup/restore, stale memory, budgets, trace minimization and data ingestion.
+
+The reliability suite additionally covers atomic approved note intent/outbox, a second destination database, key/digest conflict rejection, acknowledgement ambiguity, new-process reconciliation and a bounded synchronized duplicate-dispatch race. These are local simulated guarantees, not distributed exactly-once execution.
+
+`python scripts/run_offline.py evaluate` measures deterministic fixture outcomes. It is not model accuracy, ROI or enterprise certification. `python scripts/verify_labs.py --report artifacts/reports/lab-runs.json` checks the twelve-lab contract, resume and reliability command on a verified Mac mini. Use a fresh output path; report writers refuse overwrite.
+
+Provider tests inject a test transport by default. Optional live local-model checks are separate and require explicit approval, an installed reviewed model, recorded server/model digest and bounded requests/tokens/time. No paid provider exists in the required track, and test-double usage is not live inference evidence. Store only concise action/evidence outputs, never hidden reasoning.
+
+The hosted workflow performs static checks only. No private CI logs, self-hosted runner configuration, old commit lineage or old hosted run URLs are copied into this export. Keep actual review logs private until they have been scrubbed and approved for publication. The next twenty sequential reviews are coordinated externally; this preparation receives zero round credit.
+
+Round 1 coverage additions are in `tests/test_round1_recovery.py`, `tests/test_round1_ingest.py`, `tests/test_round1_validation.py` and `tests/test_round1_models.py`. They cover committed receipt recovery across expiry/policy changes, exact destination identity, explicit reauthorization, stale historical checkpoint semantics, malformed direct ingestion CLI trials, versioned contract completeness, envelope-preserving semantic corruption, source archives/unrelated parent repositories, bounded child failures, report failure after commit, durable partial model evidence and model-protocol robustness. Optional finite HTTP fixtures require explicit loopback opt-in. Doubles are never counted as live model observations.
+
+The [chapter-card contract](chapter-cards.json) names 25 fresh direct commands including ten standalone unittest selectors. Those selectors must each execute one test rather than being inferred from the full suite. Keep baseline/pre-fix failures and all correction attempts separate from the final frozen-source reports. Release approval and closing a review round are separate parent decisions; passing local tests does not publish or complete them.

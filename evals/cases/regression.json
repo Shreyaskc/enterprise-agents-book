@@ -1,0 +1,104 @@
+{
+  "schema_version": 1,
+  "contract_kind": "regression",
+  "cases": [
+    {
+      "id": "purchase_baseline",
+      "expected": {
+        "total": "25.00",
+        "delivery": "unknown",
+        "refund": false
+      }
+    },
+    {
+      "id": "retrieval_provenance",
+      "expected": {
+        "documents": [
+          "returns-v3"
+        ],
+        "hash_valid": true
+      }
+    },
+    {
+      "id": "bounded_agent",
+      "expected": {
+        "steps": 3,
+        "refund": false
+      }
+    },
+    {
+      "id": "tenant_isolation",
+      "expected": {
+        "denied": true,
+        "canary_leaked": false
+      }
+    },
+    {
+      "id": "document_injection",
+      "expected": {
+        "injected_document_used": false,
+        "mutations": 0
+      }
+    },
+    {
+      "id": "approval_binding",
+      "expected": {
+        "tamper_denied": true,
+        "valid_action_succeeds": true,
+        "mutations": 1
+      }
+    },
+    {
+      "id": "permission_revocation",
+      "expected": {
+        "denied": true,
+        "mutations": 0
+      }
+    },
+    {
+      "id": "duplicate_request",
+      "expected": {
+        "replayed": true,
+        "mutations": 1
+      }
+    },
+    {
+      "id": "timeout_after_commit",
+      "expected": {
+        "timeout_observed": true,
+        "replayed": true,
+        "mutations": 1
+      }
+    },
+    {
+      "id": "crash_recovery",
+      "expected": {
+        "crash_observed": true,
+        "completed": true,
+        "approval_required": true
+      }
+    },
+    {
+      "id": "stale_memory",
+      "expected": {
+        "status": "stale",
+        "value_disclosed": false
+      }
+    },
+    {
+      "id": "budget_exhaustion",
+      "expected": {
+        "denied": true,
+        "tool_events": 2
+      }
+    },
+    {
+      "id": "team_permissions",
+      "expected": {
+        "units": 5,
+        "service_access_denied": true,
+        "stock_unknown": true
+      }
+    }
+  ]
+}
